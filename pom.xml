@@ -47,15 +47,21 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
+    <!-- Hibernate EntityManager -->
     <dependency>
-    <groupId>org.hibernate</groupId>
-    <artifactId>hibernate-core</artifactId>
-    <version>6.2.7.Final</version>
-    <type>pom</type>
-</dependency>
-    </dependencies>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>5.5.6.Final</version> <!-- Use the appropriate version -->
+    </dependency>
 
+    <!-- MySQL JDBC Driver -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.29</version> <!-- Use the appropriate version -->
+    </dependency>
 
+   </dependencies>
     <build>
         <plugins>
             <!-- Maven Compiler Plugin -->
