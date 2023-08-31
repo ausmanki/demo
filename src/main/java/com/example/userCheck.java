@@ -24,7 +24,9 @@ public class userCheck extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     
-    @PersistenceContext(name="SqlInject1PU") EntityManager em;
+    @PersistenceContext(name="SqlInject1PU")
+    private EntityManager em;
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
