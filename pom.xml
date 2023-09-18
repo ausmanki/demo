@@ -60,7 +60,12 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.29</version> <!-- Use the appropriate version -->
     </dependency>
-
+<dependency>
+    <groupId>org.apache.tomcat</groupId>
+    <artifactId>tomcat</artifactId>
+    <version>9.0.0.M1</version>
+    <type>pom</type>
+</dependency>
    </dependencies>
     <build>
         <plugins>
