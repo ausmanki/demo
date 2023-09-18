@@ -39,9 +39,8 @@ public class userCheck extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             String user=request.getParameter("user");
-            String q="SELECT r FROM  User r where r.userId='"+user+"'";
-           Query query=em.createQuery(q);
-          //Query query=em.createNamedQuery("User.findByUserId");
+          
+          Query query=em.createNamedQuery("User.findByUserId");
           query.setParameter("userId", user);
            
            
