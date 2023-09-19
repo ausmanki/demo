@@ -56,6 +56,7 @@ public class userCheck extends HttpServlet {
             
         } finally {            
             out.close();
+            
         }
     }
 
