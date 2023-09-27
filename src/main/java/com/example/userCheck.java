@@ -39,9 +39,12 @@ public class userCheck extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             String user=request.getParameter("user");
-          String q = "SELECT r FROM User r where r.UserId='"+user+"'";
-          em.createQuery(q);
-           List<User> users=query.getResultList();
+          
+            String q = "SELECT r FROM User r where r.UserId='"+user+"'";
+          
+            em.createQuery(q);
+
+          List<User> users=query.getResultList();
            
             for (User user1 : users) {
                  out.println("<br/><br/>\t\t" + user1.getUserId());
