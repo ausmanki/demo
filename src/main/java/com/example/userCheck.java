@@ -39,12 +39,8 @@ public class userCheck extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             String user=request.getParameter("user");
-          
-            Query query=em.createNamedQuery("User.findByUserId");
-            query.setParameter("userId", user);
-           
-
-        
+          String q = "SELECT r FROM User r where r.UserId='"+user+"'";
+          em.createQuery(q);
            List<User> users=query.getResultList();
            
             for (User user1 : users) {
