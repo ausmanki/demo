@@ -45,7 +45,7 @@ public class userCheck1 extends HttpServlet {
            Query query=em.createNamedQuery("User.findByUserId");
            query.setParameter("userId", user);
            
-           
+           @SuppressWarnings("unchecked")
            List<User> users=query.getResultList();
            
             for (User user1 : users) {
