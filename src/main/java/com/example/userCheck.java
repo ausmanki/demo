@@ -41,7 +41,7 @@ public class userCheck extends HttpServlet {
             String user=request.getParameter("user");
           
             String q = "SELECT r FROM User r where r.UserId='"+user+"'";
-            Query query=em.createQuery(q);
+            Query query = em.createQuery(q);
 
             @SuppressWarnings("unchecked")
         List<User> users = query.getResultList();
