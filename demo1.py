@@ -8,18 +8,19 @@ REST_APIKEYLOGIN = "https://cloud.appscan.com/api/v2/Account/ApiKeyLogin"
 REST_SCANS = "https://cloud.appscan.com/api/v2/Scans/DynamicAnalyzer"
 
 def main():
-    if len(sys.argv) != 5:
-        print("\nUsage: python appscan_dast.py <API_Key> <API_Secret> <App_ID> <Target_URL>\n")
+    if len(sys.argv) != 6:
+        print("\nUsage: python appscan_dast.py <API_Key> <API_Secret> <App_ID> <Target_URL> <Scan_Name>\n")
         sys.exit(1)
 
     API_KEY = sys.argv[1]
     API_SECRET = sys.argv[2]
     APP_ID = sys.argv[3]
     TARGET_URL = sys.argv[4]
+    SCAN_NAME = sys.argv[5]
 
     token = get_token(API_KEY, API_SECRET)
 
-    scan_id = start_dast_scan(token, APP_ID, TARGET_URL)
+    scan_id = start_dast_scan(token, APP_ID, TARGET_URL, SCAN_NAME)
     print(f"DAST scan started successfully. Scan ID: {scan_id}")
 
 def get_token(api_key, api_secret):
@@ -33,7 +34,7 @@ def get_token(api_key, api_secret):
         print("Error in get_token():\n" + str(e))
         sys.exit(1)
 
-def start_dast_scan(token, app_id, target_url):
+def start_dast_scan(token, app_id, target_url, scan_name):
     try:
         headers = {
             "Authorization": "Bearer " + token,
@@ -41,8 +42,10 @@ def start_dast_scan(token, app_id, target_url):
         }
         json_data = {
             "AppId": app_id,
-            "Target": target_url,
+            "StartingUrl": target_url,
+            "PresenceId" : "1791027c-d05e-ee11-8457-14cb65725114",
             "Profile": "Default",
+            "ScanName": scan_name,
             "Incremental": False,
             "UserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"
         }
