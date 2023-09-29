@@ -1,50 +1,58 @@
+#!/usr/bin/env python3
 import requests
+import json
+import sys
 
-def get_access_token(client_id, client_secret):
-    token_url = "https://cloud.appscan.com/api/V2/Account/ApiKeyLogin"
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json'
-    }
-    data = {
-        'grant_type': 'client_credentials',
-        'client_id': client_id,
-        'client_secret': client_secret
-    }
-    response = requests.post(token_url, headers=headers, data=data)
-    return response.json().get('access_token')
+# The ASoC REST APIs used in this script:
+REST_APIKEYLOGIN = "https://cloud.appscan.com/api/v2/Account/ApiKeyLogin"
+REST_SCANS = "https://cloud.appscan.com/api/v2/Scans/DynamicAnalyzer"
 
-def start_dast_scan(access_token, target_url):
-    base_url = "https://cloud.appscan.com/api/v2/Scans/DynamicAnalyzer"
-    headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': f'Bearer {access_token}'
-    }
-    
-    scan_config = {
-        "target": target_url,
-        "scan_type": "DAST",
-        "profile": "Default",
-        "incremental": False,
-        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"
-    }
-    
-    response = requests.post(base_url, json=scan_config, headers=headers)
-    
-    if response.status_code == 200:
-        print("DAST scan started successfully.")
-    else:
-        print(f"Failed to start DAST scan. Status code: {response.status_code}")
-        print(response.text)
+def main():
+    if len(sys.argv) != 5:
+        print("\nUsage: python appscan_dast.py <API_Key> <API_Secret> <App_ID> <Target_URL>\n")
+        sys.exit(1)
 
-# Replace these with your actual client ID and client secret, and target URL
-client_id = '52b2038d-7047-e707-ec57-920e21f2a19b'
-client_secret = 'x8QcZdUmZaaEfAkBnaw7Zb52ThasKRFFIw9wQOnmnOY1'
-target_url = 'http://demo.testfire.net'
+    API_KEY = sys.argv[1]
+    API_SECRET = sys.argv[2]
+    APP_ID = sys.argv[3]
+    TARGET_URL = sys.argv[4]
 
-access_token = get_access_token(client_id, client_secret)
-if access_token:
-    start_dast_scan(access_token, target_url)
-else:
-    print("Failed to obtain access token.")
+    token = get_token(API_KEY, API_SECRET)
+
+    scan_id = start_dast_scan(token, APP_ID, TARGET_URL)
+    print(f"DAST scan started successfully. Scan ID: {scan_id}")
+
+def get_token(api_key, api_secret):
+    try:
+        json_data = {"KeyId": api_key, "KeySecret": api_secret}
+        response = requests.post(REST_APIKEYLOGIN, json=json_data)
+        response.raise_for_status()
+        json_data = json.loads(response.text)
+        return json_data['Token']
+    except requests.exceptions.RequestException as e:
+        print("Error in get_token():\n" + str(e))
+        sys.exit(1)
+
+def start_dast_scan(token, app_id, target_url):
+    try:
+        headers = {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        }
+        json_data = {
+            "AppId": app_id,
+            "Target": target_url,
+            "Profile": "Default",
+            "Incremental": False,
+            "UserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"
+        }
+        response = requests.post(REST_SCANS, headers=headers, json=json_data)
+        response.raise_for_status()
+        json_data = json.loads(response.text)
+        return json_data['Id']
+    except requests.exceptions.RequestException as e:
+        print("Error in start_dast_scan():\n" + str(e))
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
