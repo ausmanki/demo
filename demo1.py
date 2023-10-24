@@ -11,6 +11,67 @@ REST_SCANS = "https://cloud.appscan.com/api/v2/Scans/DynamicAnalyzer"
 def generate_engagement_id():
     return str(int(time.time()))  # Use timestamp as engagement ID
 
+def generate_report(token, scan_id):
+    try:
+        headers = {
+            "accept": "application/json",
+            "Authorization": f"Bearer {token}",
+        }
+        scope = "Scan"
+        report_id = scan_id
+        response = requests.post(f"https://cloud.appscan.com/api/v2/Reports/Security/{scope}/{report_id}", headers=headers, json={
+            "Configuration": {
+                "Summary": True,
+                "Details": True,
+                "Discussion": True,
+                "Overview": True,
+                "TableOfContent": True,
+                "Advisories": True,
+                "FixRecommendation": True,
+                "History": True,
+                "Coverage": True,
+                "MinimizeDetails": True,
+                "Articles": True,
+                "ReportFileType": "XML",
+                "Title": "string",
+                "Notes": "string",
+                "Locale": "string"
+            }
+        })
+        response.raise_for_status()
+        json_data = json.loads(response.text)
+        return json_data
+    except requests.exceptions.RequestException as e:
+        print("Error in generate_report():\n" + str(e))
+        sys.exit(1)
+
+def download_report(token, report_id):
+    try:
+        headers = {
+            "accept": "application/json",
+            "Authorization": f"Bearer {token}",
+        }
+        url = f"https://cloud.appscan.com/api/v2/Reports/Download/{report_id}"
+
+        # Add a loop to check report availability
+        for _ in range(60):  # Check for up to 60 seconds (adjust as needed)
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                return response.content
+            elif response.status_code == 404:
+                # Report not ready yet, wait and try again
+                time.sleep(5)  # Wait 5 seconds (adjust as needed)
+            else:
+                response.raise_for_status()
+
+        # If the loop completes without success
+        print("Report download timed out.")
+        sys.exit(1)
+
+    except requests.exceptions.RequestException as e:
+        print("Error in download_report():\n" + str(e))
+        sys.exit(1)
+
 def main():
     if len(sys.argv) != 6:
         print("\nUsage: python appscan_dast.py <API_Key> <API_Secret> <App_ID> <Target_URL> <Scan_Name>\n")
@@ -56,6 +117,19 @@ def main():
             print(f"\t Low Issues: {status_obj['LowVulnerabilities']}")
             print()
             print(f"For full details visit: https://cloud.appscan.com/main/myapps/{APP_ID}/scans/{scan_id}/scanOverview")
+            
+            # Generate report
+            report_data = generate_report(token, scan_id)
+            report_id = report_data['Id']
+            print(f"Report generated successfully. Report ID: {report_id}")
+
+            # Download report
+            time.sleep(20)
+            report_content = download_report(token, report_id)
+            with open(f"{SCAN_NAME}_report.xml", "wb") as f:
+                f.write(report_content)
+
+            print(f"Report downloaded as {SCAN_NAME}_report.xml")
             
             break
         elif status == "Error":
