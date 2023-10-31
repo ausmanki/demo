@@ -7,7 +7,7 @@ def get_product_id_by_name(token, product_name):
         "Authorization": f"Token {token}",
         "Content-Type": "application/json"
     }
-    url = "http://192.168.44.138:8080/api/v2/products/"
+    url = "http://192.168.44.139:8080/api/v2/products/"
     response = requests.get(url, headers=headers)
 
     products = response.json()
@@ -23,7 +23,7 @@ def create_new_engagement(token, product_id, engagement_name):
         "Authorization": f"Token {token}",
         "Content-Type": "application/json"
     }
-    url = "http://192.168.44.138:8080/api/v2/engagements/"
+    url = "http://192.168.44.139:8080/api/v2/engagements/"
     
     today = datetime.date.today()
     target_end_date = today + datetime.timedelta(days=15)
@@ -63,7 +63,7 @@ def post_engagement_and_import_scan(token, product_name, engagement_name, file_p
         "file": open(file_path, "rb")
     }
 
-    url2 = "http://192.168.44.138:8080/api/v2/import-scan/"
+    url2 = "http://192.168.44.139:8080/api/v2/import-scan/"
 
     response2 = requests.post(url2, headers=headers2, data=data2, files=files)
 
@@ -74,7 +74,7 @@ def create_product(token, product_name):
         "Authorization": f"Token {token}",
         "Content-Type": "application/json"
     }
-    url = "http://192.168.44.138:8080/api/v2/products/"
+    url = "http://192.168.44.139:8080/api/v2/products/"
 
     data = {
         "name": product_name,
