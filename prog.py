@@ -28,6 +28,7 @@ def generate_report(token, scan_id):
                 "TableOfContent": True,
                 "Advisories": True,
                 "FixRecommendation": True,
+                "Remediation": True,
                 "History": True,
                 "Coverage": True,
                 "MinimizeDetails": True,
