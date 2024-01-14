@@ -1,4 +1,9 @@
-import com.example.User;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import com.entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -13,6 +18,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ *
+ * @author ramakrishnan
+ */
 @WebServlet(name = "userCheck", urlPatterns = {"/userCheck"})
 public class userCheck extends HttpServlet {
 
@@ -24,9 +33,7 @@ public class userCheck extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     
-    @PersistenceContext(name="SqlInject1PU")
-    private EntityManager em;
-
+    @PersistenceContext(name="SqlInject1PU") EntityManager em;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -39,12 +46,13 @@ public class userCheck extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             String user=request.getParameter("user");
-            
-            Query query=em.createNamedQuery("User.findByUserId");
-            query.setParameter("userId", user);
-            
-            @SuppressWarnings("unchecked")
-        List<User> users = query.getResultList();
+            String q="SELECT r FROM  User r where r.userId='"+user+"'";
+           Query query=em.createQuery(q);
+          // Query query=em.createNamedQuery("User.findByUserId");
+          // query.setParameter("userId", user);
+           
+           
+           List<User> users=query.getResultList();
            
             for (User user1 : users) {
                  out.println("<br/><br/>\t\t" + user1.getUserId());
@@ -56,7 +64,6 @@ public class userCheck extends HttpServlet {
             
         } finally {            
             out.close();
-            
         }
     }
 
