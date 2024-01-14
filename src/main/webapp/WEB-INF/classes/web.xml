@@ -4,24 +4,17 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-    <!-- Servlet Mapping -->
+    <display-name>MyServletApp</display-name>
+
+    <!-- Define a servlet -->
     <servlet>
-        <servlet-name>userCheck</servlet-name>
-        <servlet-class>com.example.userCheck</servlet-class>
+        <servlet-name>HelloWorldServlet</servlet-name>
+        <servlet-class>com.example.HelloWorld</servlet-class>
     </servlet>
+
     <servlet-mapping>
-        <servlet-name>userCheck</servlet-name>
-        <url-pattern>/userCheck</url-pattern>
+        <servlet-name>HelloWorldServlet</servlet-name>
+        <url-pattern>/hello</url-pattern>
     </servlet-mapping>
-    
-    <!-- Persistence Unit Reference -->
-    <persistence-unit-ref>
-        <persistence-unit-ref-name>SqlInject1PU</persistence-unit-ref-name>
-        <persistence-unit-name>SqlInject1PU</persistence-unit-name>
-    </persistence-unit-ref>
-     <resource-ref>
-        <res-ref-name>jdbc/test</res-ref-name>
-        <res-type>javax.sql.DataSource</res-type>
-        <res-auth>Container</res-auth>
-    </resource-ref>
+
 </web-app>
