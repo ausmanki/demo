@@ -7,7 +7,7 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        
+
         <form action="userCheck">
             <input type="text" name="user" value=""/>
             <input type="submit" value="Submit"/>
