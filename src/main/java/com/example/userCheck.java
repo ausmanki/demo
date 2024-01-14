@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-import com.entity.User;
+import com.example.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
