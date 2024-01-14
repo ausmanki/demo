@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import com.example.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,10 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author ramakrishnan
- */
 @WebServlet(name = "userCheck", urlPatterns = {"/userCheck"})
 public class userCheck extends HttpServlet {
 
@@ -32,14 +23,14 @@ public class userCheck extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
+
     @PersistenceContext(name="SqlInject1PU") EntityManager em;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            
+
             out.println("<html>");
             out.println("<head>");
             out.println("<title>Servlet NewServlet</title>");  
@@ -50,18 +41,18 @@ public class userCheck extends HttpServlet {
            Query query=em.createQuery(q);
           // Query query=em.createNamedQuery("User.findByUserId");
           // query.setParameter("userId", user);
-           
-           
+
+
            List<User> users=query.getResultList();
-           
+
             for (User user1 : users) {
                  out.println("<br/><br/>\t\t" + user1.getUserId());
             }
-           
+
             out.println("<h1>Servlet NewServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
-            
+
         } finally {            
             out.close();
         }
